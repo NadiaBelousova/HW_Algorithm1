@@ -12,11 +12,13 @@ public class StringListImpl implements StringList {
     }
 
     public StringListImpl(int initSize) {
+
         storage = new String[initSize];
     }
 
     @Override
     public String add(String item) {
+
         validateSize();
         validateItem(item);
         storage[size++] = item;
@@ -25,6 +27,7 @@ public class StringListImpl implements StringList {
 
     @Override
     public String add(int index, String item) {
+
         validateSize();
         validateItem(item);
         validateIndex(index);
@@ -41,6 +44,7 @@ public class StringListImpl implements StringList {
 
     @Override
     public String set(int index, String item) {
+
         validateIndex(index);
         validateItem(item);
         storage[index] = item;
@@ -49,6 +53,7 @@ public class StringListImpl implements StringList {
 
     @Override
     public String remove(String item) {
+
         validateItem(item);
         int index = indexOf(item);
         return remove(index);
@@ -56,6 +61,7 @@ public class StringListImpl implements StringList {
 
     @Override
     public String remove(int index) {
+
         validateIndex(index);
         String item = storage[index];
         if (index != size) {
@@ -72,6 +78,7 @@ public class StringListImpl implements StringList {
 
     @Override
     public int indexOf(String item) {
+
         for (int i = 0; i < size; i++) {
             if (storage[i].equals(item)) {
                 return i;
@@ -82,6 +89,7 @@ public class StringListImpl implements StringList {
 
     @Override
     public int lastIndexOf(String item) {
+
         for (int i = size - 1; i >= 0; i--) {
             if (storage[i].equals(item)) {
                 return i;
@@ -92,6 +100,7 @@ public class StringListImpl implements StringList {
 
     @Override
     public String get(int index) {
+
         validateIndex(index);
         return storage[index];
     }
