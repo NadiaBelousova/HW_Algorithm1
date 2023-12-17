@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class IntegerListImpl implements IntegerList {
 
-    private final Integer[] storage;
+    private Integer[] storage;
 
 
     private int size;
@@ -21,7 +21,7 @@ public class IntegerListImpl implements IntegerList {
     @Override
     public Integer add(Integer item) {
 
-        validateSize();
+        growIfNeeded();
         validateItem(item);
         storage[size++] = item;
         return item;
@@ -30,14 +30,9 @@ public class IntegerListImpl implements IntegerList {
     @Override
     public Integer add(int index, Integer item) {
 
-        validateSize();
+        growIfNeeded();
         validateItem(item);
         validateIndex(index);
-
-        if (index == size) {
-            storage[size++] = item;
-            return item;
-        }
         System.arraycopy(storage, index, storage, index + 1, size - index);
         storage[index] = item;
         size++;
@@ -75,7 +70,7 @@ public class IntegerListImpl implements IntegerList {
 
     @Override
     public boolean contains(Integer item) {
-        Integer []storageCopy=toArray();
+        Integer[] storageCopy = toArray();
         sort(storageCopy);
         return binarySearch(storageCopy, item);
     }
@@ -141,9 +136,9 @@ public class IntegerListImpl implements IntegerList {
         }
     }
 
-    private void validateSize() {
+    private void growIfNeeded() {
         if (size == storage.length) {
-            throw new StorageIsFullException();
+            grow();
         }
     }
 
@@ -184,6 +179,107 @@ public class IntegerListImpl implements IntegerList {
         }
         return false;
     }
+
+    private void grow() {
+        storage = Arrays.copyOf(storage, size + size / 2);
     }
+
+    public static int[] generateRandomArray1() {
+        java.util.Random random = new java.util.Random();
+        int[] arr1 = new int[100000];
+        for (int i = 0; i < arr1.length; i++) {
+            arr1[i] = random.nextInt(50_000) + 50_000;
+        }
+        return arr1;
+    }
+
+    public static Integer[] copyRandomArray() {
+        return Arrays.copyOf(generateRandomArray1(), generateRandomArray1().length);
+    }
+
+
+    private static void swapElements(Integer[] arr1, int i1, int i2) {
+        int tmp = arr1[i1];
+        arr1[i1] = arr1[i2];
+        arr1[i2] = tmp;
+        ;
+    }
+
+    public static void sortArray(Integer[] arr) {
+        long start = System.currentTimeMillis();
+        Arrays.sort(arr);
+        System.out.println(System.currentTimeMillis() - start);
+    }
+
+    public static void sortBubble(Integer[] arr) {
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < arr.length - 1; i++) {
+            for (int j = 0; j < arr.length - 1 - i; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    swapElements(arr, j, j + 1);
+                }
+            }
+        }
+        System.out.println(System.currentTimeMillis() - start);
+    }
+
+    public static void sortSelection(Integer[] arr) {
+        long start = System.currentTimeMillis();
+
+        for (int i = 0; i < arr.length - 1; i++) {
+            int minElementIndex = i;
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[j] < arr[minElementIndex]) {
+                    minElementIndex = j;
+                }
+            }
+            swapElements(arr, i, minElementIndex);
+        }
+        System.out.println(System.currentTimeMillis() - start);
+    }
+
+
+
+    private  void quickSort(Integer[] arr, int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(arr, begin, end);
+
+            quickSort(arr, begin, partitionIndex - 1);
+            quickSort(arr, partitionIndex + 1, end);
+        }
+    }
+
+    private Integer partition(Integer[] arr, int begin, int end) {
+        int pivot = arr[end];
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+
+                swapElements(arr, i, j);
+            }
+        }
+
+        swapElements(arr, i + 1, end);
+        return i + 1;
+    }
+
+    public  void sortInsertion(Integer[] arr) {
+        long start = System.currentTimeMillis();
+        quickSort(arr, 0,arr.length -1);
+        for (int i = 1; i < arr.length; i++) {
+            int temp = arr[i];
+            int j = i;
+            while (j > 0 && arr[j - 1] >= temp) {
+                arr[j] = arr[j - 1];
+                j--;
+            }
+            arr[j] = temp;
+        }
+        System.out.println(System.currentTimeMillis() - start);
+    }
+
+}
 
 
